@@ -1,12 +1,11 @@
 import requests
 import os
 import threading
-import asyncio
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from flask import Flask
 
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = "8046771751:AAHAqpQbNofqUn94DlMbnmpkq_aPASlzXnY"
 
 app = Flask(__name__)
 
@@ -14,7 +13,6 @@ app = Flask(__name__)
 def home():
     return "Bot de Telegram corriendo."
 
-# Función del bot
 async def cotizacion(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = 'https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search'
     data = {
@@ -38,7 +36,7 @@ async def cotizacion(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def run_bot():
     app_bot = ApplicationBuilder().token(TOKEN).build()
     app_bot.add_handler(CommandHandler("dolar", cotizacion))
-    asyncio.run(app_bot.run_polling())
+    app_bot.run_polling()
 
 if __name__ == '__main__':
     threading.Thread(target=run_bot).start()
