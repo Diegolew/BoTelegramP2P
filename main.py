@@ -1,6 +1,7 @@
 import requests
 import os
 import threading
+import asyncio
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from flask import Flask
@@ -34,16 +35,12 @@ async def cotizacion(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text("❌ Error al obtener la cotización.")
 
-# Lógica del bot en un hilo separado
 def run_bot():
-    application = ApplicationBuilder().token(TOKEN).build()
-    application.add_handler(CommandHandler("dolar", cotizacion))
-    application.run_polling()
+    app_bot = ApplicationBuilder().token(TOKEN).build()
+    app_bot.add_handler(CommandHandler("dolar", cotizacion))
+    asyncio.run(app_bot.run_polling())
 
 if __name__ == '__main__':
-    # Iniciar bot en hilo paralelo
     threading.Thread(target=run_bot).start()
-    
-    # Iniciar servidor Flask para Render
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
